@@ -1,0 +1,107 @@
+﻿@page "/stopwatch"
+<PageTitle>Stopwatch</PageTitle>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #ff7e5f, #feb47b);
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
+        text-align: center;
+    }
+
+    .container {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 50px;
+        border-radius: 15px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.2em;
+        line-height: 1.5;
+    }
+
+    a {
+        color: #ff7e5f;
+        text-decoration: none;
+        border: 2px solid #ff7e5f;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: background 0.3s, color 0.3s;
+    }
+
+        a:hover {
+            background: #ff7e5f;
+            color: white;
+        }
+
+    .button {
+        background-color: #6A6ACD;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        margin-top: 12px;
+        padding: 15px 33px;
+        cursor: pointer;
+        font-size: 1.3rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background-color 0.3s,transform 0.3s ease-in-out;
+    }
+</style>
+<div class ="container">
+    <h1>Stopwatch</h1>
+    <p>Time: @timeSpan</p>
+    <button @onclick="StartStopwatch" class="button">Start</button>
+    <button @onclick="StopStopwatch" class="button">Stop</button>
+    <button @onclick="ResetStopwatch" class="button">Reset</button>
+</div>
+
+@code
+{
+    private TimeSpan timeSpan;
+    private bool isRunning = false;
+    private DateTime startTime;
+    private Timer timer;
+
+    private void StartStopwatch()
+    {
+        if (!isRunning)
+        {
+            startTime = DateTime.Now;
+            timer = new Timer(UpdateTime, null, 0, 1000);
+            isRunning = true;
+        }
+    }
+
+    private void StopStopwatch()
+    {
+        if (isRunning)
+        {
+            timer?.Dispose();
+            isRunning = false;
+        }
+    }
+
+    private void ResetStopwatch()
+    {
+        StopStopwatch();
+        timeSpan = TimeSpan.Zero;
+    }
+
+    private void UpdateTime(object state)
+    {
+        timeSpan = DateTime.Now - startTime;
+        InvokeAsync(StateHasChanged);
+    }
+}
