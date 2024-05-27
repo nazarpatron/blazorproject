@@ -56,12 +56,16 @@
         font-size: 1.3rem;
         font-weight: bold;
         text-transform: uppercase;
-        transition: background-color 0.3s,transform 0.3s ease-in-out;
+        transition: background-color 0.3s, transform 0.3s ease-in-out;
+    } 
+        .button:hover {
+            background-color: #4CAF50; 
+            transform: scale(1.05);
     }
 </style>
 <div class ="container">
     <h1>Stopwatch</h1>
-    <p>Time: @timeSpan</p>
+    <p>Time: @timeSpan.ToString(@"hh\:mm\:ss")</p>
     <button @onclick="StartStopwatch" class="button">Start</button>
     <button @onclick="StopStopwatch" class="button">Stop</button>
     <button @onclick="ResetStopwatch" class="button">Reset</button>
@@ -78,7 +82,7 @@
     {
         if (!isRunning)
         {
-            startTime = DateTime.Now;
+            startTime = DateTime.Now - timeSpan;
             timer = new Timer(UpdateTime, null, 0, 1000);
             isRunning = true;
         }
